@@ -1,6 +1,5 @@
 package com.pad.noob;
 
-import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
@@ -25,67 +24,68 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.KeyStroke;
 
-public class NoobPad extends JFrame{
-	private static JTextArea textArea = new JTextArea();
-	private JMenuBar menuBar;
-	private JMenu menu1, menu2;
-	private JMenuItem menu1_item1, menu1_item2, menu1_item3, menu2_item1;
-	private static ImageIcon logo = new ImageIcon("ressources\\NoobPad_logo.png");
-	private static ImageIcon logoX2 = new ImageIcon("ressources\\NoobPad_logo_x2.png");
+public class NoobPad extends JFrame implements INoobPad{
+	private JTextArea textArea = new JTextArea();
+	private JMenuBar menuBar = new JMenuBar();
+	
+	private JMenu menuFile = new JMenu("File");
+	private JMenu menuQuestionMark = new JMenu("?");
+	
+	private JMenuItem itemOpen = new JMenuItem("Open");
+	private JMenuItem itemSave = new JMenuItem("Save");
+	private JMenuItem itemExit = new JMenuItem("Exit");
+	private JMenuItem itemAbout = new JMenuItem("About");
+	
+	private ImageIcon logo = new ImageIcon("ressources\\NoobPad_logo.png");
+	private ImageIcon logoX2 = new ImageIcon("ressources\\NoobPad_logo_x2.png");
+	
 	
 	public NoobPad() {
 		// building menus
-		menu1_item1 = new JMenuItem("Open");
-			// add a Ctrl+O shortcut to the Save menu item
-		menu1_item1.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_O, KeyEvent.CTRL_DOWN_MASK));
-		menu1_item2 = new JMenuItem("Save");
-			// add a Ctrl+S shortcut to the Save menu item
-		menu1_item2.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_S, KeyEvent.CTRL_DOWN_MASK));
-		menu1_item3 = new JMenuItem("Exit");
-		menu1 = new JMenu("File");
-		menu1.add(menu1_item1);
-		menu1.add(menu1_item2);
-		menu1.addSeparator();
-		menu1.add(menu1_item3);
+		menuBar.add(menuFile);
+		menuBar.add(menuQuestionMark);
+		menuFile.add(itemOpen);
+		menuFile.add(itemSave);
+		menuFile.addSeparator();
+		menuFile.add(itemExit);
+		menuQuestionMark.add(itemAbout);
 
-		menu2_item1 = new JMenuItem("About");
-		menu2 = new JMenu("?");
-		menu2.add(menu2_item1);
-		
-		menuBar = new JMenuBar();
-		menuBar.add(menu1);
-		menuBar.add(menu2);
+		// add a Ctrl+O shortcut to the Open menu item
+		itemOpen.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_O, KeyEvent.CTRL_DOWN_MASK));
+		// add a Ctrl+S shortcut to the Save menu item
+		itemSave.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_S, KeyEvent.CTRL_DOWN_MASK));
 		
 		//textArea.setLineWrap(true);
 		//textArea.setWrapStyleWord(true);
 		this.setJMenuBar(menuBar);
 		this.add(new JScrollPane(textArea));
 		
-		// all items actions
-		menu1_item1.addActionListener(new ActionListener() {
+		// items actions
+		itemOpen.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent ev) {
-					OpenFileWindow();
+				OpenFileWindow();
 		}});
 		
-		menu1_item2.addActionListener(new ActionListener() {
+		itemSave.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent ev) {
 				SaveFileWindow();
 		}});
 		
-		menu1_item3.addActionListener(new ActionListener() {
+		itemExit.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent ev) {
 				System.exit(0);
 			}
 		});
 		
-		menu2_item1.addActionListener(new ActionListener() {
+		itemAbout.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent ev) {
 				AboutWindow();
 			}
 		});
 	}
 	
-	public static void SaveFileWindow() {
+	@Override
+	public void SaveFileWindow() {
 		JFileChooser fc = new JFileChooser();
 		fc.setDialogTitle("Save");
 		fc.setApproveButtonText("Save");
@@ -94,13 +94,13 @@ public class NoobPad extends JFrame{
 		try (BufferedWriter bw = new BufferedWriter(new FileWriter(fc.getSelectedFile()))) {
 			String text = textArea.getText();
 			bw.write(text);
-			System.out.println(text);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 	}
 	
-	public static void OpenFileWindow(){
+	@Override
+	public void OpenFileWindow(){
 		JFileChooser fc = new JFileChooser();
 		fc.setDialogTitle("Open");
 		fc.setApproveButtonText("Open");
@@ -115,8 +115,9 @@ public class NoobPad extends JFrame{
 		}
 			
 	}
-
-	public static void AboutWindow() {
+	
+	@Override
+	public void AboutWindow() {
 		JFrame frame = new JFrame();
 		JPanel panel = new JPanel();
 		frame.setContentPane(panel);
@@ -133,19 +134,4 @@ public class NoobPad extends JFrame{
 		frame.setVisible(true);
 	}
 	
-	public static void MainWindow() {
-		JFrame frame = new NoobPad();
-		frame.setIconImage(logo.getImage());
-		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		frame.setTitle("NoobPad");
-		frame.setSize(800, 650);
-		frame.setLocationRelativeTo(null); 
-		frame.setVisible(true);
-	}
-	
-	
-	public static void main(String[] args) {
-		MainWindow();
-	}
-
 }

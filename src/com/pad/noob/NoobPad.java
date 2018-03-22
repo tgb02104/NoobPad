@@ -23,6 +23,7 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.KeyStroke;
+import javax.swing.filechooser.FileNameExtensionFilter;
 
 public class NoobPad extends JFrame implements INoobPad{
 	private JTextArea textArea = new JTextArea();
@@ -31,6 +32,7 @@ public class NoobPad extends JFrame implements INoobPad{
 	private JMenu menuFile = new JMenu("File");
 	private JMenu menuQuestionMark = new JMenu("?");
 	
+	private JMenuItem itemNew = new JMenuItem("New");
 	private JMenuItem itemOpen = new JMenuItem("Open");
 	private JMenuItem itemSave = new JMenuItem("Save");
 	private JMenuItem itemExit = new JMenuItem("Exit");
@@ -44,15 +46,16 @@ public class NoobPad extends JFrame implements INoobPad{
 		// building menus
 		menuBar.add(menuFile);
 		menuBar.add(menuQuestionMark);
+		menuFile.add(itemNew);
 		menuFile.add(itemOpen);
 		menuFile.add(itemSave);
 		menuFile.addSeparator();
 		menuFile.add(itemExit);
 		menuQuestionMark.add(itemAbout);
-
-		// add a Ctrl+O shortcut to the Open menu item
+		
+		// keyboard shortcuts
+		itemNew.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_N, KeyEvent.CTRL_DOWN_MASK));
 		itemOpen.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_O, KeyEvent.CTRL_DOWN_MASK));
-		// add a Ctrl+S shortcut to the Save menu item
 		itemSave.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_S, KeyEvent.CTRL_DOWN_MASK));
 		
 		//textArea.setLineWrap(true);
@@ -60,16 +63,23 @@ public class NoobPad extends JFrame implements INoobPad{
 		this.setJMenuBar(menuBar);
 		this.add(new JScrollPane(textArea));
 		
-		// items actions
+		itemNew.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent ev) {
+				NewFile();
+			}
+		});
+		
 		itemOpen.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent ev) {
 				OpenFileWindow();
-		}});
+			}
+		});
 		
 		itemSave.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent ev) {
 				SaveFileWindow();
-		}});
+			}
+		});
 		
 		itemExit.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent ev) {
@@ -85,37 +95,55 @@ public class NoobPad extends JFrame implements INoobPad{
 	}
 	
 	@Override
+	public void NewFile() {
+		MainWindow.MainWindowFrame.setTitle(MainWindow.appName + " - " + "new.txt");
+		textArea.setText("");
+	}
+	
+	@Override
 	public void SaveFileWindow() {
 		JFileChooser fc = new JFileChooser();
-		fc.setDialogTitle("Save");
-		fc.setApproveButtonText("Save");
+		fc.setDialogType(JFileChooser.SAVE_DIALOG);
+		fc.setSelectedFile(new File("new.txt"));
+		fc.setFileFilter(new FileNameExtensionFilter("*.txt", "txt"));
 		fc.setCurrentDirectory(new File(System.getProperty("user.home")));
-		fc.showOpenDialog(textArea);
-		try (BufferedWriter bw = new BufferedWriter(new FileWriter(fc.getSelectedFile()))) {
-			String text = textArea.getText();
-			bw.write(text);
-		} catch (IOException e) {
-			e.printStackTrace();
+		if(fc.showSaveDialog(this) == JFileChooser.APPROVE_OPTION)
+		{
+			String filename = String.valueOf(fc.getSelectedFile());
+			if (!filename.toLowerCase().endsWith(".txt"))
+				filename += ".txt";
+			
+			File file = new File(filename);			
+			try (BufferedWriter bw = new BufferedWriter(new FileWriter(file))) {
+				String text = textArea.getText();
+				bw.write(text);	
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+			MainWindow.MainWindowFrame.setTitle(MainWindow.appName + " - " + filename);
 		}
 	}
 	
 	@Override
 	public void OpenFileWindow(){
 		JFileChooser fc = new JFileChooser();
-		fc.setDialogTitle("Open");
-		fc.setApproveButtonText("Open");
+		fc.setDialogType(JFileChooser.OPEN_DIALOG);
+		fc.setFileFilter(new FileNameExtensionFilter("*.txt", "txt"));
 		fc.setCurrentDirectory(new File(System.getProperty("user.home")));
-		fc.showOpenDialog(textArea);
-		try (BufferedReader br = new BufferedReader(new FileReader(fc.getSelectedFile()))) {
-			String line = null;
-			while ((line = br.readLine()) != null)
-				textArea.append(line + "\n");
-		} catch (IOException e) {
-			e.printStackTrace();
+		if(fc.showOpenDialog(this) == JFileChooser.APPROVE_OPTION)
+		{
+			textArea.setText("");
+			try (BufferedReader br = new BufferedReader(new FileReader(fc.getSelectedFile()))) {
+				String line = null;
+				while ((line = br.readLine()) != null)
+					textArea.append(line + "\n");					
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+			MainWindow.MainWindowFrame.setTitle(MainWindow.appName + " - " + fc.getSelectedFile());
 		}
-			
 	}
-	
+			
 	@Override
 	public void AboutWindow() {
 		JFrame frame = new JFrame();

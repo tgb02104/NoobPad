@@ -1,5 +1,7 @@
 package com.pad.noob;
 
+import java.awt.Color;
+import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
@@ -10,32 +12,37 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 
-import javax.swing.Box;
-import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
+import javax.swing.JButton;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
-import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
+import javax.swing.JTextField;
 import javax.swing.KeyStroke;
 import javax.swing.filechooser.FileNameExtensionFilter;
+import javax.swing.text.BadLocationException;
+import javax.swing.text.DefaultHighlighter;
+import javax.swing.text.Highlighter;
+import javax.swing.text.Highlighter.HighlightPainter;
 
 public class NoobPad extends JFrame implements INoobPad{
 	private JTextArea textArea = new JTextArea();
 	private JMenuBar menuBar = new JMenuBar();
 	
 	private JMenu menuFile = new JMenu("File");
+	private JMenu menuEdit = new JMenu("Edit");
 	private JMenu menuQuestionMark = new JMenu("?");
 	
 	private JMenuItem itemNew = new JMenuItem("New");
 	private JMenuItem itemOpen = new JMenuItem("Open");
 	private JMenuItem itemSave = new JMenuItem("Save");
 	private JMenuItem itemExit = new JMenuItem("Exit");
+	private JMenuItem itemFind = new JMenuItem("Find");
 	private JMenuItem itemAbout = new JMenuItem("About");
 	
 	private ImageIcon logo = new ImageIcon("ressources\\NoobPad_logo.png");
@@ -43,20 +50,22 @@ public class NoobPad extends JFrame implements INoobPad{
 	
 	
 	public NoobPad() {
-		// building menus
 		menuBar.add(menuFile);
+		menuBar.add(menuEdit);
 		menuBar.add(menuQuestionMark);
 		menuFile.add(itemNew);
 		menuFile.add(itemOpen);
 		menuFile.add(itemSave);
 		menuFile.addSeparator();
 		menuFile.add(itemExit);
+		menuEdit.add(itemFind);
 		menuQuestionMark.add(itemAbout);
 		
 		// keyboard shortcuts
 		itemNew.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_N, KeyEvent.CTRL_DOWN_MASK));
 		itemOpen.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_O, KeyEvent.CTRL_DOWN_MASK));
 		itemSave.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_S, KeyEvent.CTRL_DOWN_MASK));
+		itemFind.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_F, KeyEvent.CTRL_DOWN_MASK));
 		
 		//textArea.setLineWrap(true);
 		//textArea.setWrapStyleWord(true);
@@ -84,6 +93,12 @@ public class NoobPad extends JFrame implements INoobPad{
 		itemExit.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent ev) {
 				System.exit(0);
+			}
+		});
+		
+		itemFind.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent ev) {
+				FindWindow();
 			}
 		});
 		
@@ -143,23 +158,56 @@ public class NoobPad extends JFrame implements INoobPad{
 			MainWindow.MainWindowFrame.setTitle(MainWindow.appName + " - " + fc.getSelectedFile());
 		}
 	}
-			
+	
 	@Override
-	public void AboutWindow() {
+	public void FindWindow() {
 		JFrame frame = new JFrame();
-		JPanel panel = new JPanel();
-		frame.setContentPane(panel);
-		frame.setLayout(new BoxLayout(panel, BoxLayout.X_AXIS));
+		JTextField textField = new JTextField(15);
+		JButton nextBtn = new JButton("Next");
+		frame.setLayout(new FlowLayout(FlowLayout.LEFT, 10, 10));
 		frame.setIconImage(logo.getImage());
-		frame.add(Box.createHorizontalStrut(15));
-		frame.add(new JLabel(logoX2));
-		frame.add(Box.createHorizontalStrut(35));
-		frame.add(new JLabel("NoobPad v1"));
-		frame.setTitle("About");
-		frame.setSize(220, 125);
+		frame.add(new JLabel("Find :"));
+		frame.add(textField);
+		frame.add(nextBtn);
+		frame.setTitle("Find");
 		frame.setLocationRelativeTo(null); 
 		frame.setResizable(false);
 		frame.setVisible(true);
+		frame.pack();
+		
+		// still not 100% working
+		nextBtn.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent ev) {
+				Highlighter highlighter = textArea.getHighlighter();
+			    HighlightPainter painter = new DefaultHighlighter.DefaultHighlightPainter(Color.lightGray);
+			    
+			    // removing previous highlight
+			    highlighter.removeAllHighlights();
+			    
+				int indexStart = textArea.getText().indexOf(textField.getText());
+				int indexEnd = indexStart + textField.getText().length();
+				try {
+					highlighter.addHighlight(indexStart, indexEnd, painter);
+				} catch (BadLocationException e) {
+					e.printStackTrace();
+				}
+			}
+		});
+		
+	}
+	
+	@Override
+	public void AboutWindow() {
+		JFrame frame = new JFrame();
+		frame.setLayout(new FlowLayout(FlowLayout.LEFT, 30, 30));
+		frame.setIconImage(logo.getImage());
+		frame.add(new JLabel(logoX2));
+		frame.add(new JLabel("NoobPad v1"));
+		frame.setTitle("About");
+		frame.setLocationRelativeTo(null); 
+		frame.setResizable(false);
+		frame.setVisible(true);
+		frame.pack();
 	}
 	
 }

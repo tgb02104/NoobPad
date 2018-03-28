@@ -30,7 +30,7 @@ import javax.swing.text.DefaultHighlighter;
 import javax.swing.text.Highlighter;
 import javax.swing.text.Highlighter.HighlightPainter;
 
-public class NoobPad extends JFrame implements INoobPad{
+public class NoobPad extends JFrame implements INoobPad, ActionListener {
 	private JTextArea textArea = new JTextArea();
 	private JMenuBar menuBar = new JMenuBar();
 	
@@ -47,6 +47,9 @@ public class NoobPad extends JFrame implements INoobPad{
 	
 	private ImageIcon logo = new ImageIcon("ressources\\NoobPad_logo.png");
 	private ImageIcon logoX2 = new ImageIcon("ressources\\NoobPad_logo_x2.png");
+	
+	private JFrame mainWindowFrame = new JFrame();
+	private String appName = new String("NoobPad");
 	
 	
 	public NoobPad() {
@@ -72,95 +75,44 @@ public class NoobPad extends JFrame implements INoobPad{
 		this.setJMenuBar(menuBar);
 		this.add(new JScrollPane(textArea));
 		
-		itemNew.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent ev) {
-				NewFile();
-			}
-		});
-		
-		itemOpen.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent ev) {
-				OpenFileWindow();
-			}
-		});
-		
-		itemSave.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent ev) {
-				SaveFileWindow();
-			}
-		});
-		
-		itemExit.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent ev) {
-				System.exit(0);
-			}
-		});
-		
-		itemFind.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent ev) {
-				FindWindow();
-			}
-		});
-		
-		itemAbout.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent ev) {
-				AboutWindow();
-			}
-		});
+		itemNew.addActionListener(this);
+		itemOpen.addActionListener(this);
+		itemSave.addActionListener(this);
+		itemExit.addActionListener(this);
+		itemFind.addActionListener(this);
+		itemAbout.addActionListener(this);
+	}
+	
+	public ImageIcon getLogo() {
+		return this.logo;
+	}
+	
+	public ImageIcon getLogoX2() {
+		return this.logoX2;
+	}
+	
+	public JFrame getMainWindowFrame() {
+		return this.mainWindowFrame;
+	}
+	
+	public String getAppName() {
+		return this.appName;
+	}
+	
+	public JTextArea getTextArea() {
+		return this.textArea;
 	}
 	
 	@Override
-	public void NewFile() {
-		MainWindow.MainWindowFrame.setTitle(MainWindow.appName + " - " + "new.txt");
+	public void newFile() {
+		mainWindowFrame.setTitle(appName + " - " + "new.txt");
 		textArea.setText("");
 	}
-	
+
+
+	// à zoulouter plus tard
 	@Override
-	public void SaveFileWindow() {
-		JFileChooser fc = new JFileChooser();
-		fc.setDialogType(JFileChooser.SAVE_DIALOG);
-		fc.setSelectedFile(new File("new.txt"));
-		fc.setFileFilter(new FileNameExtensionFilter("*.txt", "txt"));
-		fc.setCurrentDirectory(new File(System.getProperty("user.home")));
-		if(fc.showSaveDialog(this) == JFileChooser.APPROVE_OPTION)
-		{
-			String filename = String.valueOf(fc.getSelectedFile());
-			if (!filename.toLowerCase().endsWith(".txt"))
-				filename += ".txt";
-			
-			File file = new File(filename);			
-			try (BufferedWriter bw = new BufferedWriter(new FileWriter(file))) {
-				String text = textArea.getText();
-				bw.write(text);	
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-			MainWindow.MainWindowFrame.setTitle(MainWindow.appName + " - " + filename);
-		}
-	}
-	
-	@Override
-	public void OpenFileWindow(){
-		JFileChooser fc = new JFileChooser();
-		fc.setDialogType(JFileChooser.OPEN_DIALOG);
-		fc.setFileFilter(new FileNameExtensionFilter("*.txt", "txt"));
-		fc.setCurrentDirectory(new File(System.getProperty("user.home")));
-		if(fc.showOpenDialog(this) == JFileChooser.APPROVE_OPTION)
-		{
-			textArea.setText("");
-			try (BufferedReader br = new BufferedReader(new FileReader(fc.getSelectedFile()))) {
-				String line = null;
-				while ((line = br.readLine()) != null)
-					textArea.append(line + "\n");					
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-			MainWindow.MainWindowFrame.setTitle(MainWindow.appName + " - " + fc.getSelectedFile());
-		}
-	}
-	
-	@Override
-	public void FindWindow() {
+	public void findWindow() {
 		JFrame frame = new JFrame();
 		JTextField textField = new JTextField(15);
 		JButton nextBtn = new JButton("Next");
@@ -174,14 +126,14 @@ public class NoobPad extends JFrame implements INoobPad{
 		frame.setResizable(false);
 		frame.setVisible(true);
 		frame.pack();
-		
+
 		// still not 100% working
 		nextBtn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent ev) {
 				Highlighter highlighter = textArea.getHighlighter();
 			    HighlightPainter painter = new DefaultHighlighter.DefaultHighlightPainter(Color.lightGray);
 			    
-			    // removing previous highlight
+			    // removing previous highlight when clicking on Next button
 			    highlighter.removeAllHighlights();
 			    
 				int indexStart = textArea.getText().indexOf(textField.getText());
@@ -195,19 +147,24 @@ public class NoobPad extends JFrame implements INoobPad{
 		});
 		
 	}
-	
+
+
 	@Override
-	public void AboutWindow() {
-		JFrame frame = new JFrame();
-		frame.setLayout(new FlowLayout(FlowLayout.LEFT, 30, 30));
-		frame.setIconImage(logo.getImage());
-		frame.add(new JLabel(logoX2));
-		frame.add(new JLabel("NoobPad v1"));
-		frame.setTitle("About");
-		frame.setLocationRelativeTo(null); 
-		frame.setResizable(false);
-		frame.setVisible(true);
-		frame.pack();
-	}
-	
+	public void actionPerformed(ActionEvent ev) {
+		if (ev.getSource() == itemNew)
+			newFile();
+		else if (ev.getSource() == itemOpen)
+			new OpenFileWindow();
+		else if (ev.getSource() == itemSave)
+			new SaveFileWindow();
+		else if (ev.getSource() == itemAbout)
+			new AboutWindow();
+		else if (ev.getSource() == itemFind)
+			findWindow();
+		else 
+			System.exit(0);
+			
+			
+	}	
 }
+

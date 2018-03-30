@@ -25,9 +25,7 @@ public class OpenFileWindow {
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
-			// marche pas
-			noobPad.getMainWindowFrame().setTitle(noobPad.getAppName() + " - " + fc.getSelectedFile());
-			//n.getMainWindowFrame().repaint();
+			noobPad.setTitle(noobPad.getAppName() + " - " + fc.getSelectedFile());
 			
 		}
 	}

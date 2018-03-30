@@ -48,7 +48,6 @@ public class NoobPad extends JFrame implements INoobPad, ActionListener {
 	private ImageIcon logo = new ImageIcon("ressources\\NoobPad_logo.png");
 	private ImageIcon logoX2 = new ImageIcon("ressources\\NoobPad_logo_x2.png");
 	
-	private JFrame mainWindowFrame = new JFrame();
 	private String appName = new String("NoobPad");
 	
 	
@@ -90,11 +89,7 @@ public class NoobPad extends JFrame implements INoobPad, ActionListener {
 	public ImageIcon getLogoX2() {
 		return this.logoX2;
 	}
-	
-	public JFrame getMainWindowFrame() {
-		return this.mainWindowFrame;
-	}
-	
+		
 	public String getAppName() {
 		return this.appName;
 	}
@@ -105,7 +100,7 @@ public class NoobPad extends JFrame implements INoobPad, ActionListener {
 	
 	@Override
 	public void newFile() {
-		mainWindowFrame.setTitle(appName + " - " + "new.txt");
+		this.setTitle(appName + " - " + "new.txt");
 		textArea.setText("");
 	}
 

@@ -29,7 +29,7 @@ public class SaveFileWindow {
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
-			noobPad.getMainWindowFrame().setTitle(noobPad.getAppName() + " - " + filename);
+			noobPad.setTitle(noobPad.getAppName() + " - " + filename);
 		}
 	}
 

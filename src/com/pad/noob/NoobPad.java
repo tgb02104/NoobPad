@@ -154,17 +154,15 @@ public class NoobPad extends JFrame implements INoobPad, ActionListener {
 		if (ev.getSource() == itemNew)
 			newFile();
 		else if (ev.getSource() == itemOpen)
-			new OpenFileWindow();
+			new OpenFileWindow(this);
 		else if (ev.getSource() == itemSave)
-			new SaveFileWindow();
+			new SaveFileWindow(this);
 		else if (ev.getSource() == itemAbout)
-			new AboutWindow();
+			new AboutWindow(this);
 		else if (ev.getSource() == itemFind)
 			findWindow();
 		else 
 			System.exit(0);
-			
-			
 	}	
 }
 

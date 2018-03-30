@@ -3,17 +3,14 @@ package com.pad.noob;
 import javax.swing.JFrame;
 
 public class MainWindow {
-	private NoobPad n = new NoobPad();
-	private JFrame mainWindowFrame = n.getMainWindowFrame();
 	
-	public MainWindow() {
-		mainWindowFrame = new NoobPad();
-		mainWindowFrame.setIconImage(n.getLogo().getImage());
-		mainWindowFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		mainWindowFrame.setTitle(n.getAppName() + " - " + "new.txt");
-		mainWindowFrame.setSize(800, 650);
-		mainWindowFrame.setLocationRelativeTo(null); 
-		mainWindowFrame.setVisible(true);
+	public MainWindow(NoobPad noobPad) { // issue in Main.java
+		noobPad.setIconImage(noobPad.getLogo().getImage());
+		noobPad.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		noobPad.setTitle(noobPad.getAppName() + " - " + "new.txt");
+		noobPad.setSize(800, 650);
+		noobPad.setLocationRelativeTo(null); 
+		noobPad.setVisible(true);
 	}
 
 }

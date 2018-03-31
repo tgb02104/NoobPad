@@ -105,7 +105,7 @@ public class NoobPad extends JFrame implements INoobPad, ActionListener {
 	}
 
 
-	// à zoulouter plus tard
+	// a zoulouter plus tard
 	@Override
 	public void findWindow() {
 		JFrame frame = new JFrame();

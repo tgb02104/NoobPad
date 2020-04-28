@@ -13,7 +13,7 @@ public class SaveFileWindow {
 	public SaveFileWindow(NoobPad noobPad) {
 		JFileChooser fc = new JFileChooser();
 		fc.setDialogType(JFileChooser.SAVE_DIALOG);
-		fc.setSelectedFile(new File("new.txt"));
+		fc.setSelectedFile(new File("제목없음.txt"));
 		fc.setFileFilter(new FileNameExtensionFilter("*.txt", "txt"));
 		fc.setCurrentDirectory(new File(System.getProperty("user.home")));
 		if(fc.showSaveDialog(noobPad) == JFileChooser.APPROVE_OPTION)

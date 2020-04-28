@@ -20,7 +20,7 @@ public class NoobPad extends JFrame implements ActionListener {
 	private JMenu menuFile = new JMenu("File");
 	private JMenu menuEdit = new JMenu("Edit");
 	private JMenu menuQuestionMark = new JMenu("?");
-	
+
 	private JMenuItem itemNew = new JMenuItem("New");
 	private JMenuItem itemOpen = new JMenuItem("Open");
 	private JMenuItem itemSave = new JMenuItem("Save");

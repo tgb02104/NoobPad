@@ -14,29 +14,32 @@ import javax.swing.JTextArea;
 import javax.swing.KeyStroke;
 
 public class NoobPad extends JFrame implements ActionListener {
-	private JTextArea textArea = new JTextArea();
+	public static  JTextArea textArea = new JTextArea();
 	private JMenuBar menuBar = new JMenuBar();
 	
-	private JMenu menuFile = new JMenu("File");
-	private JMenu menuEdit = new JMenu("Edit");
-	private JMenu menuQuestionMark = new JMenu("?");
-
-	private JMenuItem itemNew = new JMenuItem("New");
-	private JMenuItem itemOpen = new JMenuItem("Open");
-	private JMenuItem itemSave = new JMenuItem("Save");
-	private JMenuItem itemExit = new JMenuItem("Exit");
-	private JMenuItem itemFind = new JMenuItem("Find");
-	private JMenuItem itemAbout = new JMenuItem("About");
+	private JMenu menuFile = new JMenu("파일");
+	private JMenu menuEdit = new JMenu("편집");
+	private JMenu menuFont = new JMenu("서식");
+	private JMenu menuQuestionMark = new JMenu("도움말");
+	private JMenuItem itemNew = new JMenuItem("새로만들기");
+	private JMenuItem itemOpen = new JMenuItem("열기");
+	private JMenuItem itemSave = new JMenuItem("저장");
+	private JMenuItem itemExit = new JMenuItem("끝내기");
+	private JMenuItem itemFind = new JMenuItem("검색");
+	private JMenuItem itemAbout = new JMenuItem("정보");
 	
-	private ImageIcon logo = new ImageIcon("ressources\\NoobPad_logo.png");
-	private ImageIcon logoX2 = new ImageIcon("ressources\\NoobPad_logo_x2.png");
+	private JMenuItem itemFontColor = new JMenuItem("글자색");
+	private JMenuItem itemBackgroundColor = new JMenuItem("배경색");
+	private ImageIcon logo = new ImageIcon("ressources\\images.png");
+	private ImageIcon logoX2 = new ImageIcon("ressources\\images.png");
 	
-	private String appName = new String("NoobPad");
-	
+	private String appName = new String("myNotePad");
+	public static JScrollPane  pn = new JScrollPane(textArea);
 	
 	public NoobPad() {
 		menuBar.add(menuFile);
 		menuBar.add(menuEdit);
+		menuBar.add(menuFont);
 		menuBar.add(menuQuestionMark);
 		menuFile.add(itemNew);
 		menuFile.add(itemOpen);
@@ -45,6 +48,8 @@ public class NoobPad extends JFrame implements ActionListener {
 		menuFile.add(itemExit);
 		menuEdit.add(itemFind);
 		menuQuestionMark.add(itemAbout);
+		menuFont.add(itemFontColor);
+		menuFont.add(itemBackgroundColor);
 		
 		// keyboard shortcuts
 		itemNew.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_N, KeyEvent.CTRL_DOWN_MASK));
@@ -53,7 +58,8 @@ public class NoobPad extends JFrame implements ActionListener {
 		itemFind.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_F, KeyEvent.CTRL_DOWN_MASK));
 		
 		this.setJMenuBar(menuBar);
-		this.add(new JScrollPane(textArea));
+
+		this.add(pn);
 		
 		itemNew.addActionListener(this);
 		itemOpen.addActionListener(this);
@@ -61,6 +67,8 @@ public class NoobPad extends JFrame implements ActionListener {
 		itemExit.addActionListener(this);
 		itemFind.addActionListener(this);
 		itemAbout.addActionListener(this);
+		itemFontColor.addActionListener(this);
+		itemBackgroundColor.addActionListener(this);
 	}
 	
 	
@@ -82,7 +90,7 @@ public class NoobPad extends JFrame implements ActionListener {
 	
 	
 	public void newFile() {
-		this.setTitle(appName + " - " + "new.txt");
+		this.setTitle(appName + " - " + "제목없음.txt"); 
 		textArea.setText("");
 	}
 
@@ -98,6 +106,10 @@ public class NoobPad extends JFrame implements ActionListener {
 			new AboutWindow(this);
 		else if (ev.getSource() == itemFind)
 			new FindWindow(this);
+		else if (ev.getSource() == itemFontColor)
+			new FontWindow(this);
+		else if (ev.getSource() == itemBackgroundColor)
+			new BackWindow(this);
 		else 
 			System.exit(0);
 	}	

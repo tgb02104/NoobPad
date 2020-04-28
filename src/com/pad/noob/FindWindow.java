@@ -18,16 +18,16 @@ import javax.swing.text.Highlighter.HighlightPainter;
 public class FindWindow {
 	private JDialog frame = new JDialog();
 	private JTextField textField = new JTextField(15);
-	private JButton nextBtn = new JButton("Next");
+	private JButton nextBtn = new JButton("다음");
 	private int keepSearch = 0;
 	
 	public FindWindow(NoobPad noobPad) {
 		frame.setLayout(new FlowLayout(FlowLayout.LEFT, 10, 10));
 		frame.setIconImage(noobPad.getLogo().getImage());
-		frame.add(new JLabel("Find :"));
+		frame.add(new JLabel("검색 :"));
 		frame.add(textField);
 		frame.add(nextBtn);
-		frame.setTitle("Find");
+		frame.setTitle("검색");
 		frame.setLocationRelativeTo(null); 
 		frame.setResizable(false);
 		frame.setVisible(true);
